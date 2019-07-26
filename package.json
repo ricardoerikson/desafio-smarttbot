@@ -1,0 +1,33 @@
+{
+  "name": "desafio-smarttbot",
+  "version": "0.0.0-development",
+  "description": "Desafio SmarttBot - Dev Sênior Fullstack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "semantic-release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ricardoerikson/desafio-smarttbot.git"
+  },
+  "author": "Ricardo Erikson <ricardoerikson@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ricardoerikson/desafio-smarttbot/issues"
+  },
+  "homepage": "https://github.com/ricardoerikson/desafio-smarttbot#readme",
+  "devDependencies": {
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2",
+    "semantic-release": "^15.13.18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
