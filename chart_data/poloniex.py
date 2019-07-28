@@ -1,14 +1,21 @@
 import asyncio
+import numpy as np
+
 from aiohttp import ClientSession
 
 class PoloniexHttpAPI():
 	"""
 	Wrapper class to perform HTTP requests to Poloniex's public http API
 	"""
+	VALID_PERIODS = np.array([300, 900, 1800, 7200, 14400, 86400])
 
 	def __init__(self):
 		self.uri = 'https://poloniex.com/public'
-		self.loop = asyncio.get_event_loop()
+
+	def optimum_period(intended_period):
+		mod = intended_period % PoloniexHttpAPI.VALID_PERIODS
+		index = np.argwhere(mod == 0).max()
+		return PoloniexHttpAPI.VALID_PERIODS[index]
 
 	def timestamp(self, date, format="%Y-%m-%d %H-%M"):
 		"""
@@ -54,8 +61,8 @@ class PoloniexHttpAPI():
 		    json: candlestick data
 		"""
 		params = {'currencyPair': currencyPair, 'period': period, 'start': start, 'end': end}
-		fetch = self.fetch('get', 'returnChartData', params)
-		return self.loop.run_until_complete(fetch)
+		return self.fetch('get', 'returnChartData', params)
+
 
 	def ticker(self):
 		"""
@@ -64,5 +71,15 @@ class PoloniexHttpAPI():
 		Returns:
 		    json: currency data
 		"""
-		fetch = self.fetch('get', 'returnTicker')
-		return self.loop.run_until_complete(fetch)
+		return self.fetch('get', 'returnTicker')
+
+
+	def currencies(self):
+		"""
+		Returns the currency pairs
+
+		Returns:
+		    json: Information about the currency pairs
+		"""
+		return self.fetch('get', 'returnCurrencies')
+
