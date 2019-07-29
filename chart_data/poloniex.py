@@ -1,7 +1,9 @@
 import asyncio
+import time
 import numpy as np
 
 from aiohttp import ClientSession
+from utils import convert_period_into_seconds, validate_period_format
 
 class PoloniexHttpAPI():
 	"""
@@ -9,8 +11,9 @@ class PoloniexHttpAPI():
 	"""
 	VALID_PERIODS = np.array([300, 900, 1800, 7200, 14400, 86400])
 
-	def __init__(self):
+	def __init__(self, offset=10):
 		self.uri = 'https://poloniex.com/public'
+		self.offset = offset
 
 	def optimum_period(intended_period):
 		mod = intended_period % PoloniexHttpAPI.VALID_PERIODS
@@ -47,20 +50,29 @@ class PoloniexHttpAPI():
 			async with session.request(method, self.uri, params={**com, **params}) as response:
 				return await response.text()
 
-	def chart_data(self, currencyPair, period, start, end):
+	def get_chart_data_params(self, period, window):
+		window_end = int(time.time())
+		seconds = convert_period_into_seconds(period)
+		optimum_period = int(PoloniexHttpAPI.optimum_period(seconds))
+		window_start = int(np.ceil((window_end - seconds * (window+self.offset)) / optimum_period) * optimum_period)
+		return optimum_period, window_start, window_end
+
+	def chart_data(self, currencyPair, period, window):
 		"""
 		Returns candlestick chart data according to the given parameters
 
 		Args:
 		    currencyPair (str): currency pair. ex: BTC_XMR
-		    period (int): period in seconds. valid values are 300, 900, 1800, 7200, 14400 and 86400
-		    start (int): start of the window in seconds since the unix epoch
-		    end (int): end of the window in seconds since the unix epoch
+		    period (string): period in string format. the same passed as parameter in url
+		    window (int): number of candles
 
 		Returns:
 		    json: candlestick data
 		"""
-		params = {'currencyPair': currencyPair, 'period': period, 'start': start, 'end': end}
+		validate_period_format(period)
+
+		optimum_period, start, end = self.get_chart_data_params(period, window)
+		params = {'currencyPair': currencyPair, 'period': optimum_period, 'start': start, 'end': end}
 		return self.fetch('get', 'returnChartData', params)
 
 
