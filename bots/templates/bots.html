@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <p class="h1 text-center">Robôs cadastrados</p>
+</div>
+<div class="container">
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th class="text-center" scope="col">#</th>
+                <th class="text-center" scope="col">Nome</th>
+                <th class="text-center" scope="col">Par de moedas</th>
+                <th class="text-center" scope="col">Posição atual</th>
+                <th class="text-center" scope="col">Status</th>
+                <th class="text-center" scope="col">Editar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bot in bots %}
+            <tr>
+                <th class="text-center" scope="row">{{ bot.id }}</th>
+                <td class="text-center">{{ bot.name }}</td>
+                <td class="text-center">{{ bot.currency_pair.code }}</td>
+                <td class="text-center"> - </td>
+                <td class="text-center">
+                    {% if bot.active %}
+                    <span class="badge badge-pill badge-success">On</span>
+                    {% else %}
+                    <span class="badge badge-pill badge-danger">Off</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-primary btn-sm" href="{{ url_for('bots_edit', id=bot.id) }}" role="button">Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

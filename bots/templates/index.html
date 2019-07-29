@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+	<p class="h1 text-center">Cotações dos pares de moedas nas últimas 24 horas</p>
+</div>
+<div class="container">
+	<table class="table">
+		<thead class="thead-light">
+			<tr>
+				<th scope="col">Par de moedas</th>
+				<th class="text-right" scope="col">Última cotação</th>
+				<th class="text-right" scope="col">Máxima (24h)</th>
+				<th class="text-right" scope="col">Mínima (24h)</th>
+				<th class="text-right" scope="col">Volume</th>
+				<th class="text-right" scope="col">Variação (%)</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for pair, row in df.iterrows() %}
+			<tr>
+				<td scope="row">{{ pair | replace('_', '/') }}</td>
+				<td class="text-right text-monospace">{{ '%0.8f' % row['last'] | float }}</td>
+				<td class="text-right text-monospace">{{ '%0.8f' % row['high24hr'] | float }}</td>
+				<td class="text-right text-monospace">{{ '%0.8f' % row['low24hr'] | float }}</td>
+				<td class="text-right text-monospace">{{ '%0.8f' % row['baseVolume'] | float }}</td>
+				<td class="text-right text-monospace {{ row['font_color'] }}">{{ '%0.3f' % row['percentChange'] | float }} %</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}

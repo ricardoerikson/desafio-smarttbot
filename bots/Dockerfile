@@ -1,10 +1,8 @@
-FROM python:3.7-slim
+FROM desafio-smarttbot:latest
 
 WORKDIR /bots
 
-COPY requirements.txt /bots
-RUN pip3 install -r requirements.txt
-COPY app_bots.py /bots
+COPY . /bots
 
 ENTRYPOINT ["python"]
 CMD ["app_bots.py"]

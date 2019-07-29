@@ -2,6 +2,7 @@ version: "2"
 services:
   chart_data:
     build: ./chart_data
+    restart: always
     entrypoint:
       - flask
       - run
@@ -15,6 +16,7 @@ services:
       - ./chart_data:/chart_data
   bots:
     build: ./bots
+    restart: always
     entrypoint:
       - flask
       - run
@@ -22,7 +24,19 @@ services:
     environment:
       FLASK_DEBUG: 1
       FLASK_APP: ./app_bots.py
+      RDBMS_URL: mysql+pymysql://root:root@rdbms:3306/botsdb
     ports:
       - 5001:5000
     volumes:
       - ./bots:/bots
+  rdbms:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: botsdb
+    volumes:
+      - ./data-folder:/var/lib/mysql
