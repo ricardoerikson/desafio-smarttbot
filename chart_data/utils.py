@@ -41,3 +41,21 @@ def convert_period_into_seconds(period_str):
 
 	# if period is given in days (d)
 	return number * 60 * 60 * 24
+
+def convert_period_into_pandas_freq(period_str):
+	"""converts the period into a frequency format used by pandas library.
+
+	Args:
+	    period_str (string): period in string format using m, h and d to represent
+	    minutes, hours and days.
+
+	Returns:
+	    string: new value for period according to pandas frequency format.
+	    ex: 1m -> 1min, 1h -> 1H and 1d -> 1D
+	"""
+	number = ''.join(filter(str.isdigit, period_str))
+	letter = ''.join(filter(str.isalpha, period_str))
+	if letter == 'm':
+		return ''.join([number, 'min'])
+	# return uppercase of period_str for other values of letter
+	return period_str.upper()
