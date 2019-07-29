@@ -24,5 +24,25 @@ def candles(currency_pair, period, window):
 	resampled = resample_candles(df, period, window)
 	return app.response_class(response=resampled.to_json(orient='records', date_format='epoch'), status=200, mimetype='application/json')
 
+@app.route('/ticker')
+def ticker():
+	polo = PoloniexHttpAPI()
+	req = polo.ticker()
+	loop = asyncio.new_event_loop()
+	content = loop.run_until_complete(req)
+	loop.close()
+
+	return app.response_class(response=content, status=200, mimetype='application/json')
+
+@app.route('/currencies')
+def currencies():
+	polo = PoloniexHttpAPI()
+	req = polo.ticker()
+	loop = asyncio.new_event_loop()
+	content = loop.run_until_complete(req)
+	loop.close()
+
+	return app.response_class(response=content, status=200, mimetype='application/json')
+
 if __name__ == '__main__':
 	app.run(debug=True, host='0.0.0.0')
