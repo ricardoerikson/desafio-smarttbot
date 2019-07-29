@@ -1,0 +1,28 @@
+version: "2"
+services:
+  chart_data:
+    build: ./chart_data
+    entrypoint:
+      - flask
+      - run
+      - --host=0.0.0.0
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_APP: ./app_chart_data.py
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./chart_data:/chart_data
+  bots:
+    build: ./bots
+    entrypoint:
+      - flask
+      - run
+      - --host=0.0.0.0
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_APP: ./app_bots.py
+    ports:
+      - 5001:5000
+    volumes:
+      - ./bots:/bots
