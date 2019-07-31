@@ -22,3 +22,19 @@ class Trade(db.Model):
 	def __repr__(self):
 		return f"Trade #{self.id}, currency_pair: {self.currency_pair.code}, trade_type: {self.trade_type}, enter_price: {self.enter_price}, exit_price: {self.exit_price}"
 
+	@hybrid_property
+	def buy_price(self):
+		if self.trade_type == 'B':
+			return self.enter_price
+		return self.exit_price
+
+	@hybrid_property
+	def sell_price(self):
+		if self.trade_type == 'S':
+			return self.enter_price
+		return self.exit_price
+
+	@hybrid_property
+	def result(self):
+		return (self.sell_price - self.buy_price) * self.amount
+

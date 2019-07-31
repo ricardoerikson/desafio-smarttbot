@@ -25,6 +25,7 @@
                 <th class="text-center" scope="col">Posição atual</th>
                 <th class="text-center" scope="col">Status</th>
                 <th class="text-center" scope="col">Editar</th>
+                <th class="text-center" scope="col">Operações</th>
             </tr>
         </thead>
         <tbody>
@@ -43,6 +44,9 @@
                 </td>
                 <td class="text-center">
                     <a class="btn btn-primary btn-sm" href="{{ url_for('bots_edit', id=bot.id) }}" role="button">Editar</a>
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-primary btn-sm" href="{{ url_for('bots_report', id=bot.id) }}" role="button">Visualizar</a>
                 </td>
             </tr>
             {% endfor %}

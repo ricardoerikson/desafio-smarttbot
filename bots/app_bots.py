@@ -82,6 +82,12 @@ def bots_add():
 		return redirect(url_for('bots'))
 	return render_template('bots_add.html', form = form)
 
+@app.route('/bots/<int:id>/report', methods=['GET'])
+def bots_report(id):
+	bot = Bot.query.get(id)
+	trades = bot.trades
+	return render_template('bots_report.html', bot = bot, trades=trades)
+
 @app.route('/bots/<int:id>/edit', methods=["GET", "POST"])
 def bots_edit(id):
 	bot = Bot.query.get_or_404(id, description='Bot não encontrado')
@@ -97,7 +103,7 @@ def bots_edit(id):
 			form.populate_obj(bot)
 			if bot.active == 0:
 				ea = ExpertAdvisor(bot, app, db)
-				ea.close_position()
+				ea.close_position(update=True)
 			db.session.commit()
 			return redirect(url_for('bots'))
 	return render_template('bots_edit.html', form=form)
