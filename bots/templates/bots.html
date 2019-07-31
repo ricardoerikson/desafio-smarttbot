@@ -1,10 +1,21 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Bots</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block custom_commands %}
 <div class="container">
-    <p class="h1 text-center">Robôs cadastrados</p>
+    <a class="btn btn-primary" href="{{ url_for('bots_add')}}" role="button">Novo Bot</a>
 </div>
-<div class="container">
+{% endblock %}
+
+{% block content %}
+
     <table class="table">
         <thead class="thead-light">
             <tr>
@@ -37,6 +48,5 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
 
 {% endblock %}
