@@ -1,6 +1,6 @@
 from core.model import db
 from datetime import datetime
-from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 
 class Trade(db.Model):
 	__tablename__ = 'trades'
@@ -26,15 +26,28 @@ class Trade(db.Model):
 	def buy_price(self):
 		if self.trade_type == 'B':
 			return self.enter_price
+		if self.is_open:
+			return None
 		return self.exit_price
 
 	@hybrid_property
 	def sell_price(self):
 		if self.trade_type == 'S':
 			return self.enter_price
+		if self.is_open:
+			return None
 		return self.exit_price
 
-	@hybrid_property
-	def result(self):
+	@hybrid_method
+	def result(self, current_price):
+		if self.is_open:
+			if self.trade_type == 'B':
+				return (current_price - self.buy_price) * self.amount
+			else:
+				return (self.sell_price - current_price) * self.amount
 		return (self.sell_price - self.buy_price) * self.amount
+
+	@hybrid_property
+	def is_open(self):
+		return self.exit_price is None
 

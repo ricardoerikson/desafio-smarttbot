@@ -86,7 +86,9 @@ def bots_add():
 def bots_report(id):
 	bot = Bot.query.get(id)
 	trades = bot.trades
-	return render_template('bots_report.html', bot = bot, trades=trades)
+	ea = ExpertAdvisor(bot, app, db)
+	ea.update_data()
+	return render_template('bots_report.html', bot = bot, trades=trades, current_price=ea.current_price)
 
 @app.route('/bots/<int:id>/edit', methods=["GET", "POST"])
 def bots_edit(id):
