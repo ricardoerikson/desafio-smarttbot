@@ -25,11 +25,11 @@
 	{% for pair, row in df.iterrows() %}
 		<tr>
 			<td scope="row">{{ pair | replace('_', '/') }}</td>
-			<td class="text-right text-monospace">{{ '%0.8f' % row['last'] | float }}</td>
-			<td class="text-right text-monospace">{{ '%0.8f' % row['high24hr'] | float }}</td>
-			<td class="text-right text-monospace">{{ '%0.8f' % row['low24hr'] | float }}</td>
-			<td class="text-right text-monospace">{{ '%0.8f' % row['baseVolume'] | float }}</td>
-			<td class="text-right text-monospace {{ row['font_color'] }}">{{ '%0.3f' % row['percentChange'] | float }} %</td>
+			<td class="text-right small">{{ '%0.8f' % row['last'] | float }}</td>
+			<td class="text-right small">{{ '%0.8f' % row['high24hr'] | float }}</td>
+			<td class="text-right small">{{ '%0.8f' % row['low24hr'] | float }}</td>
+			<td class="text-right small">{{ '%0.8f' % row['baseVolume'] | float }}</td>
+			<td class="text-right small {{ row['font_color'] }}">{{ '%0.3f' % row['percentChange'] | float }} %</td>
 		</tr>
 	{% endfor %}
 	</tbody>
