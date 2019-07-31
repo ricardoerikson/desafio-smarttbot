@@ -1,6 +1,6 @@
 from core.model import db
 from datetime import datetime
-from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 
 
 class Bot(db.Model):
@@ -11,6 +11,7 @@ class Bot(db.Model):
 	amount         = db.Column(db.Float, nullable=False)
 	loss_size      = db.Column(db.Float, nullable=False)
 	gain_size      = db.Column(db.Float, nullable=False)
+	period         = db.Column(db.String(10), nullable=False)
 	short_sma      = db.Column(db.Integer, nullable=False)
 	long_sma       = db.Column(db.Integer, nullable=False)
 	active         = db.Column(db.Boolean, default=False)
@@ -18,7 +19,7 @@ class Bot(db.Model):
 	__created      = db.Column(db.DateTime, default=datetime.now)
 	__last_updated = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
-	trades         = db.relationship('Trade', backref='bot', uselist=True, lazy='select')
+	trades         = db.relationship('Trade', backref='bot', uselist=True, lazy='dynamic')
 	currency_pair  = db.relationship('CurrencyPair', uselist=False)
 	currency_pair_id  = db.Column(db.Integer, db.ForeignKey('currency_pairs.id'))
 
@@ -29,6 +30,10 @@ class Bot(db.Model):
 	@hybrid_property
 	def last_updated(self):
 		return self.__last_updated
+
+	@hybrid_method
+	def position(self):
+		return  self.trades.filter_by(exit_price=None).first()
 
 	def __repr__(self):
 		return f"#{self.id} Bot name is: {self.name}. short sma: {self.short_sma} and long sma: {self.long_sma}"

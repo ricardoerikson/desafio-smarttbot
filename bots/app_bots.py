@@ -1,19 +1,23 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, json, session
 from flask_wtf.csrf import CSRFProtect
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 
 import os
+import time
 import requests
 import pandas as pd
 
 from core.model import db
 
+from expert_advisor import ExpertAdvisor
 from currency_pairs_model import CurrencyPair
 from bots_model import Bot
 from trades_model import Trade
 
 from bots_form import BotsForm
+
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
@@ -28,13 +32,25 @@ db.init_app(app)
 app.app_context().push()
 Migrate(app, db)
 
+sched = BackgroundScheduler()
 
-@app.route('/index2')
-def index2():
-	CurrencyPair.query.all
-	res = requests.get(url)
+@sched.scheduled_job('interval', seconds=3)
+def evaluate_strategies():
+	with app.app_context():
+		bots = Bot.query.filter_by(active=1).all()
+		app.logger.info('{} running bots'.format(len(bots)))
+		for bot in bots:
+			ea = ExpertAdvisor(bot, app, db)
+			ea.evaluate_strategy()
 
-	return res.content
+
+sched.start()
+
+@app.route('/eas')
+def ea():
+	bot = Bot.query.get(4)
+	id = bot.opened_position()
+	return str(id.id)
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
@@ -66,6 +82,14 @@ def bots_add():
 		return redirect(url_for('bots'))
 	return render_template('bots_add.html', form = form)
 
+@app.route('/bots/<int:id>/report', methods=['GET'])
+def bots_report(id):
+	bot = Bot.query.get(id)
+	trades = bot.trades
+	ea = ExpertAdvisor(bot, app, db)
+	ea.update_data()
+	return render_template('bots_report.html', bot = bot, trades=trades, current_price=ea.current_price)
+
 @app.route('/bots/<int:id>/edit', methods=["GET", "POST"])
 def bots_edit(id):
 	bot = Bot.query.get_or_404(id, description='Bot não encontrado')
@@ -79,6 +103,9 @@ def bots_edit(id):
 		form.currency_pair_id.choices = currencies
 		if form.validate_on_submit():
 			form.populate_obj(bot)
+			if bot.active == 0:
+				ea = ExpertAdvisor(bot, app, db)
+				ea.close_position(update=True)
 			db.session.commit()
 			return redirect(url_for('bots'))
 	return render_template('bots_edit.html', form=form)

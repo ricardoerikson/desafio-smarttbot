@@ -14,7 +14,7 @@ def parse_candles(content):
 
 
 
-def resample_candles(df, period, window):
+def resample_candles(df, period):
     """aggregates candles according to a (new) given period of time in order to
     obtain candles in a different period.
 
@@ -25,5 +25,4 @@ def resample_candles(df, period, window):
     new_period = convert_period_into_pandas_freq(period)
     resampled = df.resample(new_period).agg({'open': 'first', 'high': 'max', 'low': 'min', 'close': 'last'})
     resampled.reset_index(inplace=True)
-    resampled.drop(resampled.index[:-window], inplace=True)
     return resampled
