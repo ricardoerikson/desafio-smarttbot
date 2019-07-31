@@ -1,6 +1,7 @@
 # Others
 node_modules/
 *.sublime-*
+data-folder
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

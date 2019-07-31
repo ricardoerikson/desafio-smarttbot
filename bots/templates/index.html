@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" aria-current="page">Cotações das últimas 24 horas</li>
+  </ol>
+</nav>
+
+{% endblock %}
+{% block content %}
+<table class="table">
+	<thead class="thead-light">
+		<tr>
+			<th scope="col">Par de moedas</th>
+			<th class="text-right" scope="col">Última cotação</th>
+			<th class="text-right" scope="col">Máxima (24h)</th>
+			<th class="text-right" scope="col">Mínima (24h)</th>
+			<th class="text-right" scope="col">Volume</th>
+			<th class="text-right" scope="col">Variação (%)</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for pair, row in df.iterrows() %}
+		<tr>
+			<td scope="row">{{ pair | replace('_', '/') }}</td>
+			<td class="text-right text-monospace">{{ '%0.8f' % row['last'] | float }}</td>
+			<td class="text-right text-monospace">{{ '%0.8f' % row['high24hr'] | float }}</td>
+			<td class="text-right text-monospace">{{ '%0.8f' % row['low24hr'] | float }}</td>
+			<td class="text-right text-monospace">{{ '%0.8f' % row['baseVolume'] | float }}</td>
+			<td class="text-right text-monospace {{ row['font_color'] }}">{{ '%0.3f' % row['percentChange'] | float }} %</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
