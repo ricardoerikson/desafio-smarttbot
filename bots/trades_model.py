@@ -11,11 +11,13 @@ class Trade(db.Model):
 	enter_price      = db.Column(db.Float, nullable=False)
 	exit_price       = db.Column(db.Float, nullable=True)
 	amount           = db.Column(db.Float, nullable=False)
+	trade_type       = db.Column(db.String(1), nullable=False)
 
+	currency_pair    = db.relationship('CurrencyPair', uselist=False)
 	currency_pair_id = db.Column(db.Integer, db.ForeignKey('currency_pairs.id'))
 	bot_id           = db.Column(db.Integer, db.ForeignKey('bots.id'))
 
 
 
 	def __repr__(self):
-		return f"Trade #{self.id}, currency_pair_id: {self.currency_pair_id}, enter_price: {self.enter_price}, exit_price: {self.exit_price}"
+		return f"Trade #{self.id}, currency_pair: {self.currency_pair.code}, trade_type: {self.trade_type}, enter_price: {self.enter_price}, exit_price: {self.exit_price}"
