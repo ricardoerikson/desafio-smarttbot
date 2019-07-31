@@ -63,7 +63,9 @@ class ExpertAdvisor():
 
 		self.app.logger.info('Nothing to do for #{} - {}'.format(self.bot.id, self.bot.name))
 
-	def close_position(self):
+	def close_position(self, update=False):
+		if update == True:
+			self.update_data()
 		position = self.bot.position()
 		if position is None:
 			return

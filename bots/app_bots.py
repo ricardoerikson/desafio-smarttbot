@@ -95,6 +95,9 @@ def bots_edit(id):
 		form.currency_pair_id.choices = currencies
 		if form.validate_on_submit():
 			form.populate_obj(bot)
+			if bot.active == 0:
+				ea = ExpertAdvisor(bot, app, db)
+				ea.close_position()
 			db.session.commit()
 			return redirect(url_for('bots'))
 	return render_template('bots_edit.html', form=form)
