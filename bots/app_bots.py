@@ -1,19 +1,23 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, json, session
 from flask_wtf.csrf import CSRFProtect
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 
 import os
+import time
 import requests
 import pandas as pd
 
 from core.model import db
 
+from expert_advisor import ExpertAdvisor
 from currency_pairs_model import CurrencyPair
 from bots_model import Bot
 from trades_model import Trade
 
 from bots_form import BotsForm
+
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
@@ -28,13 +32,25 @@ db.init_app(app)
 app.app_context().push()
 Migrate(app, db)
 
+sched = BackgroundScheduler()
 
-@app.route('/index2')
-def index2():
-	CurrencyPair.query.all
-	res = requests.get(url)
+@sched.scheduled_job('interval', seconds=3)
+def evaluate_strategies():
+	with app.app_context():
+		bots = Bot.query.filter_by(active=1).all()
+		app.logger.info('{} running bots'.format(len(bots)))
+		for bot in bots:
+			ea = ExpertAdvisor(bot, app, db)
+			ea.evaluate_strategy()
 
-	return res.content
+
+sched.start()
+
+@app.route('/eas')
+def ea():
+	bot = Bot.query.get(4)
+	id = bot.opened_position()
+	return str(id.id)
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])

@@ -13,7 +13,7 @@ app = Flask(__name__)
 @app.route('/candles/<string:currency_pair>/period/<string:period>/window/<int:window>')
 def candles(currency_pair, period, window):
 	# request to poloniex api
-	polo = PoloniexHttpAPI(offset=10)
+	polo = PoloniexHttpAPI(offset=200)
 	req = polo.chart_data(currency_pair.upper(), period, window)
 	loop = asyncio.new_event_loop()
 	content = loop.run_until_complete(req)
@@ -21,7 +21,7 @@ def candles(currency_pair, period, window):
 
 	# resample candles to period
 	df = parse_candles(content)
-	resampled = resample_candles(df, period, window)
+	resampled = resample_candles(df, period)
 	return app.response_class(response=resampled.to_json(orient='records', date_format='epoch'), status=200, mimetype='application/json')
 
 @app.route('/ticker')
