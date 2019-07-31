@@ -11,6 +11,7 @@ class Bot(db.Model):
 	amount         = db.Column(db.Float, nullable=False)
 	loss_size      = db.Column(db.Float, nullable=False)
 	gain_size      = db.Column(db.Float, nullable=False)
+	period         = db.Column(db.String(10), nullable=False)
 	short_sma      = db.Column(db.Integer, nullable=False)
 	long_sma       = db.Column(db.Integer, nullable=False)
 	active         = db.Column(db.Boolean, default=False)

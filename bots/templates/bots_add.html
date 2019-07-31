@@ -15,7 +15,7 @@
 {% block content %}
 <form method="POST">
     {{ form.csrf_token() }}
-    {{ render_form_row([form.name, form.currency_pair_id]) }}
+    {{ render_form_row([form.name, form.currency_pair_id, form.period]) }}
     {{ render_form_row([form.gain_size, form.loss_size])}}
     {{ render_form_row([form.amount, form.short_sma, form.long_sma]) }}
     <div class="form-row">
