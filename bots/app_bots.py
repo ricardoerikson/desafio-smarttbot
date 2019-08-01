@@ -34,7 +34,7 @@ Migrate(app, db)
 
 sched = BackgroundScheduler()
 
-@sched.scheduled_job('interval', seconds=3)
+@sched.scheduled_job('interval', seconds=10)
 def evaluate_strategies():
 	with app.app_context():
 		bots = Bot.query.filter_by(active=1).all()
@@ -102,10 +102,10 @@ def bots_edit(id):
 	if request.method == 'POST':
 		form.currency_pair_id.choices = currencies
 		if form.validate_on_submit():
-			form.populate_obj(bot)
-			if bot.active == 0:
+			if bot.active == 0 or form.currency_pair_id != bot.currency_pair_id:
 				ea = ExpertAdvisor(bot, app, db)
 				ea.close_position(update=True)
+			form.populate_obj(bot)
 			db.session.commit()
 			return redirect(url_for('bots'))
 	return render_template('bots_edit.html', form=form)
