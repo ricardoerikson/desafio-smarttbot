@@ -36,11 +36,11 @@
                 <th class="text-center" scope="row">{{ trade.open_time }}</th>
                 <td class="text-center {{ '' if trade.close_time else 'text-warning'}}">{{ trade.close_time if trade.close_time else 'Aberta' }}</td>
                 <td class="text-center {{ 'text-success' if trade.trade_type == 'B' else 'text-danger'}}">{{ 'Compra' if trade.trade_type == 'B' else 'Venda' }}</td>
-                <td class="text-center {{'' if trade.buy_price else 'text-warning'}}">{{ '%.8f' | format(trade.buy_price if trade.buy_price else current_price | float) }}</td>
-                <td class="text-center {{'' if trade.sell_price else 'text-warning'}}">{{ '%.8f' | format(trade.sell_price if trade.sell_price else current_price | float) }}</td>
+                <td class="text-right {{'' if trade.buy_price else 'text-warning'}}">{{ '%.8f' | format(trade.buy_price if trade.buy_price else current_price | float) }}</td>
+                <td class="text-right {{'' if trade.sell_price else 'text-warning'}}">{{ '%.8f' | format(trade.sell_price if trade.sell_price else current_price | float) }}</td>
                 <td class="text-center">{{ trade.amount }}</td>
 
-                <td class="text-center">{{ trade.result(current_price) }}</td>
+                <td class="text-right">{{ '%0.8f' % trade.result(current_price) }}</td>
             </tr>
             {% endfor %}
         </tbody>
