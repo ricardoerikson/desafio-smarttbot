@@ -22,7 +22,6 @@
                 <th class="text-center" scope="col">#</th>
                 <th class="text-center" scope="col">Nome</th>
                 <th class="text-center" scope="col">Par de moedas</th>
-                <th class="text-center" scope="col">Posição atual</th>
                 <th class="text-center" scope="col">Status</th>
                 <th class="text-center" scope="col">Editar</th>
                 <th class="text-center" scope="col">Operações</th>
@@ -34,7 +33,6 @@
                 <th class="text-center" scope="row">{{ bot.id }}</th>
                 <td class="text-center">{{ bot.name }}</td>
                 <td class="text-center">{{ bot.currency_pair.code }}</td>
-                <td class="text-center"> - </td>
                 <td class="text-center">
                     {% if bot.active %}
                     <span class="badge badge-pill badge-success">On</span>
