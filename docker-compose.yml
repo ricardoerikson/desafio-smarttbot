@@ -1,6 +1,7 @@
 version: "2"
 services:
   chart_data:
+    container_name: chart_data
     build: ./chart_data
     restart: always
     entrypoint:
@@ -15,6 +16,7 @@ services:
     volumes:
       - ./chart_data:/chart_data
   bots:
+    container_name: bots
     build: ./bots
     restart: always
     entrypoint:
@@ -30,6 +32,7 @@ services:
     volumes:
       - ./bots:/bots
   rdbms:
+    container_name: rdbms
     image: mysql:5.7
     restart: always
     ports:
