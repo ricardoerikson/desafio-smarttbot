@@ -1,4 +1,4 @@
-from core.model import db
+from app import db
 from datetime import datetime
 
 class CurrencyPair(db.Model):
