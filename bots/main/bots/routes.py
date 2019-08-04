@@ -1,13 +1,13 @@
-import app
+import main
 
 from flask import Blueprint, render_template, redirect, url_for, request
 
-from app.core.models import db
-from app.bots.models import Bot
-from app.bots.forms import BotsForm
-from app.currencies.models import CurrencyPair
+from main.core.models import db
+from main.bots.models import Bot
+from main.bots.forms import BotsForm
+from main.currencies.models import CurrencyPair
 
-from app.expert_advisor import ExpertAdvisor
+from main.expert_advisor import ExpertAdvisor
 
 
 bots_blueprint = Blueprint('bots', __name__, template_folder = 'templates')
@@ -35,7 +35,7 @@ def add():
 def trades(id):
 	bot = Bot.query.get(id)
 	trades = bot.trades
-	ea = ExpertAdvisor(bot, app.app, db)
+	ea = ExpertAdvisor(bot, main.app, db)
 	ea.update_data()
 	return render_template('bots/trades.html', bot = bot, trades=trades, current_price=ea.current_price)
 
@@ -52,7 +52,7 @@ def edit(id):
 		form.currency_pair_id.choices = currencies
 		if form.validate_on_submit():
 			if bot.active == 0 or form.currency_pair_id != bot.currency_pair_id:
-				ea = ExpertAdvisor(bot, app, db)
+				ea = ExpertAdvisor(bot, main.app, db)
 				ea.close_position(update=True)
 			form.populate_obj(bot)
 			db.session.commit()
