@@ -1,16 +1,6 @@
 
-import time
-import requests
-import pandas as pd
-
-from core.model import db
-
-from expert_advisor import ExpertAdvisor
-from currency_pairs_model import CurrencyPair
-from bots_model import Bot
-from trades_model import Trade
-
-from bots_form import BotsForm
+from app import app
+from app.core.model import db
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -24,7 +14,6 @@ def evaluate_strategies():
 		for bot in bots:
 			ea = ExpertAdvisor(bot, app, db)
 			ea.evaluate_strategy()
-
 
 sched.start()
 

@@ -25,12 +25,12 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}" id="index_nav">
+                        <a class="nav-link" href="{{ url_for('currencies.index') }}" id="currencies_nav">
                             Cotações
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" href="{{ url_for('bots') }}" id="bots_nav">
+                        <a class="nav-link" href="{{ url_for('bots.index') }}" id="bots_nav">
                             Bots
                         </a>
                     </li>
@@ -52,7 +52,7 @@
         </script>
         <script>
             $(document).ready(function () {
-                $("#{{request.endpoint}}_nav").parent().addClass("active");
+                $("#{{request.blueprint}}_nav").parent().addClass("active");
             })
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip()

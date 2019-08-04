@@ -1,17 +1,23 @@
-from flask import Blueprint, render_template, redirect, url_for
+import app
 
-from app import db
+from flask import Blueprint, render_template, redirect, url_for, request
+
+from app.core.models import db
 from app.bots.models import Bot
 from app.bots.forms import BotsForm
+from app.currencies.models import CurrencyPair
 
-bots_blueprints = Blueprint('bots', __name__, templates_folder = 'templates')
+from app.expert_advisor import ExpertAdvisor
 
-@bots_blueprints.route('/', methods=['GET'])
+
+bots_blueprint = Blueprint('bots', __name__, template_folder = 'templates')
+
+@bots_blueprint.route('/', methods=['GET'])
 def index():
 	bots = Bot.query.all()
-	return render_template('index.html', bots=bots)
+	return render_template('bots/index.html', bots=bots)
 
-@bots_blueprints.route('/add', methods=['GET', 'POST'])
+@bots_blueprint.route('/add', methods=['GET', 'POST'])
 def add():
 	form = BotsForm()
 	currencies = CurrencyPair.query.all()
@@ -22,18 +28,18 @@ def add():
 		bot.id = None
 		db.session.add(bot)
 		db.session.commit()
-		return redirect(url_for('bots'))
-	return render_template('add.html', form = form)
+		return redirect(url_for('bots.index'))
+	return render_template('bots/add.html', form = form)
 
-@bots_blueprints.route('/<int:id>/trades', methods=['GET'])
+@bots_blueprint.route('/<int:id>/trades', methods=['GET'])
 def trades(id):
 	bot = Bot.query.get(id)
 	trades = bot.trades
-	ea = ExpertAdvisor(bot, app, db)
+	ea = ExpertAdvisor(bot, app.app, db)
 	ea.update_data()
-	return render_template('trades.html', bot = bot, trades=trades, current_price=ea.current_price)
+	return render_template('bots/trades.html', bot = bot, trades=trades, current_price=ea.current_price)
 
-@bots_blueprints.route('/<int:id>/edit', methods=["GET", "POST"])
+@bots_blueprint.route('/<int:id>/edit', methods=["GET", "POST"])
 def edit(id):
 	bot = Bot.query.get_or_404(id, description='Bot não encontrado')
 	form = BotsForm()
@@ -50,6 +56,6 @@ def edit(id):
 				ea.close_position(update=True)
 			form.populate_obj(bot)
 			db.session.commit()
-			return redirect(url_for('bots'))
-	return render_template('edit.html', form=form)
+			return redirect(url_for('bots.index'))
+	return render_template('bots/edit.html', form=form)
 
