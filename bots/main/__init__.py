@@ -14,7 +14,7 @@ from main.home.routes import home_blueprint
 from main.currencies.routes import currencies_blueprint
 
 
-def create_app():
+def create_app(db):
 	app = Flask(__name__)
 
 	app.config['SECRET_KEY'] = 'the-quick-brown-fox-jumps-over-the-lazy-dog'
@@ -32,6 +32,6 @@ def create_app():
 	app.register_blueprint(bots_blueprint, url_prefix='/bots')
 	app.register_blueprint(currencies_blueprint, url_prefix='/currencies')
 	app.register_blueprint(home_blueprint)
-	return app
+	return app, db
 
-app = create_app()
+app, db = create_app(db)
