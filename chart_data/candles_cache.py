@@ -36,6 +36,7 @@ class CandlesCacheService():
 		last_timestamp = last_timestamp[0] if bool(last_timestamp) else last_timestamp
 		dicts = None
 		if not(bool(first_timestamp)) or float(first_timestamp) > start or float(last_timestamp) < self.timestamp_for_previous_candle(optimum_period):
+			self.logger.info('last candle: {}, previous candle: {}'.format( last_timestamp, self.timestamp_for_previous_candle(optimum_period)))
 			dicts = self.send_request(polo, optimum_period, start, end)
 			self.store(dicts)
 		else:
