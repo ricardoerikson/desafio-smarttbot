@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import (validators, DecimalField, StringField, BooleanField, HiddenField, SelectField,
 					SubmitField, IntegerField)
 from wtforms.validators import DataRequired, ValidationError
-from core.validators import positive_value
+from main.core.validators import positive_value
 
 import re
 

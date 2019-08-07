@@ -8,3 +8,4 @@ aiohttp==3.5.4
 pandas==0.24.2
 requests==2.21.0
 apscheduler==3.6.1
+redis==3.3.5

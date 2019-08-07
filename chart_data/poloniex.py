@@ -20,19 +20,6 @@ class PoloniexHttpAPI():
 		index = np.argwhere(mod == 0).max()
 		return PoloniexHttpAPI.VALID_PERIODS[index]
 
-	def timestamp(self, date, format="%Y-%m-%d %H-%M"):
-		"""
-		Converts date in str format into unix timestamp
-
-		Args:
-		    date (str): date in str format
-		    format (str, optional): format parameters
-
-		Returns:
-		    int: unix timestamp format
-		"""
-		return time.mktime(time.strptime(date, format))
-
 	async def fetch(self, method, command, params={}):
 		"""
 		Base method for http requests to public API
@@ -57,22 +44,20 @@ class PoloniexHttpAPI():
 		window_start = int(np.ceil((window_end - seconds * (window+self.offset)) / optimum_period) * optimum_period)
 		return optimum_period, window_start, window_end
 
-	def chart_data(self, currencyPair, period, window):
+	def chart_data(self, currencyPair, period, start, end):
 		"""
 		Returns candlestick chart data according to the given parameters
 
 		Args:
 		    currencyPair (str): currency pair. ex: BTC_XMR
-		    period (string): period in string format. the same passed as parameter in url
-		    window (int): number of candles
+		    period (int): period in seconds
+		    start (int): initial time in unix epoch
+		    end (int): end time in unix epoch
 
 		Returns:
 		    json: candlestick data
 		"""
-		validate_period_format(period)
-
-		optimum_period, start, end = self.get_chart_data_params(period, window)
-		params = {'currencyPair': currencyPair, 'period': optimum_period, 'start': start, 'end': end}
+		params = {'currencyPair': currencyPair, 'period': period, 'start': start, 'end': end}
 		return self.fetch('get', 'returnChartData', params)
 
 

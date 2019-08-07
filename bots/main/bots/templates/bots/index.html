@@ -10,7 +10,7 @@
 
 {% block custom_commands %}
 <div class="container">
-    <a class="btn btn-primary" href="{{ url_for('bots_add')}}" role="button">Novo Bot</a>
+    <a class="btn btn-primary" href="{{ url_for('bots.add')}}" role="button">Novo Bot</a>
 </div>
 {% endblock %}
 
@@ -41,10 +41,10 @@
                     {% endif %}
                 </td>
                 <td class="text-center">
-                    <a class="btn btn-primary btn-sm" href="{{ url_for('bots_edit', id=bot.id) }}" role="button">Editar</a>
+                    <a class="btn btn-primary btn-sm" href="{{ url_for('bots.edit', id=bot.id) }}" role="button">Editar</a>
                 </td>
                 <td class="text-center">
-                    <a class="btn btn-primary btn-sm" href="{{ url_for('bots_report', id=bot.id) }}" role="button">Visualizar</a>
+                    <a class="btn btn-primary btn-sm" href="{{ url_for('bots.trades', id=bot.id) }}" role="button">Visualizar</a>
                 </td>
             </tr>
             {% endfor %}
