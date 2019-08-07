@@ -5,4 +5,4 @@ WORKDIR /bots
 COPY . /bots
 
 ENTRYPOINT ["python"]
-CMD ["app_bots.py"]
+CMD ["app.py"]

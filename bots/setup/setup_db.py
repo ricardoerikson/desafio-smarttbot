@@ -2,18 +2,16 @@ import sys
 import requests
 import pandas as pd
 
-from app_bots import db, app
-from currency_pairs_model import CurrencyPair
-from flask_migrate import Migrate
+sys.path.append('/bots')
 
-Migrate(app, db)
+from main import app, db
+from main.currencies.models import CurrencyPair
 
 with app.app_context():
 	response = requests.get('http://chart_data:5000/currencies')
 	if response.status_code != 200:
 		sys.exit(1)
 
-	db.create_all()
 	currencies = []
 	df = pd.read_json(response.content, orient='index')
 	df.sort_index(ascending=True, inplace=True)

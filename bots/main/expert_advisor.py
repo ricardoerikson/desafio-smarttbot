@@ -1,8 +1,7 @@
 import pandas as pd
 import requests
 
-from trades_model import Trade
-from bots_model import Bot
+from main.bots.models import Bot, Trade
 
 class ExpertAdvisor():
 

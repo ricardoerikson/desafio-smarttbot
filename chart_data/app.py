@@ -1,28 +1,30 @@
+import os
+import json
 import asyncio
 import time
 import numpy as np
+import pandas as pd
 
-from flask import Flask
+from flask import Flask, jsonify
 
 from poloniex import PoloniexHttpAPI
-from candlesticks import parse_candles, resample_candles
+from candles_cache import CandlesCacheService
 from utils import convert_period_into_seconds, convert_period_into_pandas_freq
+
+import redis
+
+redis_conn = redis.Redis(os.environ['REDIS_URL'], decode_responses=True)
 
 app = Flask(__name__)
 
 @app.route('/candles/<string:currency_pair>/period/<string:period>/window/<int:window>')
 def candles(currency_pair, period, window):
-	# request to poloniex api
-	polo = PoloniexHttpAPI(offset=200)
-	req = polo.chart_data(currency_pair.upper(), period, window)
-	loop = asyncio.new_event_loop()
-	content = loop.run_until_complete(req)
-	loop.close()
-
-	# resample candles to period
-	df = parse_candles(content)
-	resampled = resample_candles(df, period)
-	return app.response_class(response=resampled.to_json(orient='records', date_format='epoch'), status=200, mimetype='application/json')
+	cache = CandlesCacheService(currency_pair, period, window, redis_conn, app.logger)
+	data = cache.retrieve()
+	df = pd.DataFrame.from_dict(data)
+	df['date'] = pd.to_datetime(df['date'].map(lambda v: int(float(v))), unit='s')
+	df['close'] = df['close'].map(float)
+	return app.response_class(response=df.to_json(orient='records'), status=200, mimetype='application/json')
 
 @app.route('/ticker')
 def ticker():
@@ -31,13 +33,14 @@ def ticker():
 	loop = asyncio.new_event_loop()
 	content = loop.run_until_complete(req)
 	loop.close()
-
+	df = pd.read_json(content, orient='index')
 	return app.response_class(response=content, status=200, mimetype='application/json')
+
 
 @app.route('/currencies')
 def currencies():
 	polo = PoloniexHttpAPI()
-	req = polo.ticker()
+	req = polo.currencies()
 	loop = asyncio.new_event_loop()
 	content = loop.run_until_complete(req)
 	loop.close()

@@ -5,7 +5,7 @@
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{{ url_for('bots') }}">Bots</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('bots.index') }}">Bots</a></li>
     <li class="breadcrumb-item active" aria-current="page">Editar (Bot #{{ form.id.data }})</li>
   </ol>
 </nav>
