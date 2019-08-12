@@ -6,7 +6,8 @@
  - De dentro da pasta do repositório, executar os seguintes comandos:
     - `docker image build --tag desafio-smarttbot:latest docker/`
     - `docker-compose up -d --build`
-    - `docker exec -it bots python setup_db.py (inicialização do banco de dados)`
+    - `docker exec -it bots flask db upgrade`
+    - `docker exec -it bots python setup/setup_db.py` (inicialização do banco de dados)
 
 ## Descrição do desafio
 
