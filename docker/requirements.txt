@@ -4,7 +4,7 @@ Flask-SQLAlchemy==2.4.0
 Flask-Migrate==2.5.2
 pymysql==0.9.3
 bootstrap-flask==1.0.10
-aiohttp==3.5.4
+aiohttp==3.7.4
 pandas==0.24.2
 requests==2.21.0
 apscheduler==3.6.1
